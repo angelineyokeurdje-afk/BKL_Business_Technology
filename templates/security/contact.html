@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Contact — BKLbusiness{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-1"><i class="bi bi-envelope me-2"></i>Contactez-nous</h1>
+        <p class="mb-0 opacity-75">Nous sommes à votre écoute</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-4">
+            <div class="card p-4 h-100">
+                <h5 class="fw-bold mb-4"><i class="bi bi-info-circle me-2" style="color:#4f46e5"></i>Informations</h5>
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:42px;height:42px;background:#f1f5f9">
+                        <i class="bi bi-geo-alt" style="color:#4f46e5"></i>
+                    </div>
+                    <div>
+                        <p class="fw-semibold mb-0">Adresse</p>
+                        <p class="text-muted small mb-0">Avenue Charles de Gaulle<br>N'Djamena, Tchad</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:42px;height:42px;background:#f1f5f9">
+                        <i class="bi bi-telephone" style="color:#10b981"></i>
+                    </div>
+                    <div>
+                        <p class="fw-semibold mb-0">Téléphone</p>
+                        <p class="text-muted small mb-0">+235 90 45 82 82<br>+235 69 67 82 82</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start gap-3">
+                    <div class="rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:42px;height:42px;background:#f1f5f9">
+                        <i class="bi bi-envelope" style="color:#f59e0b"></i>
+                    </div>
+                    <div>
+                        <p class="fw-semibold mb-0">Email</p>
+                        <p class="text-muted small mb-0">contact@bklbusiness<br>technologies.com</p>
+                    </div>
+                </div>
+                <hr class="my-4">
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4"><i class="bi bi-chat-dots me-2" style="color:#4f46e5"></i>Envoyer un message</h5>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="id_nom" class="form-label fw-semibold">Nom complet *</label>
+                            <input type="text" id="id_nom" name="nom" class="form-control"
+                                   placeholder="Jean Dupont" required minlength="2">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="id_email" class="form-label fw-semibold">Email *</label>
+                            <input type="email" id="id_email" name="email" class="form-control"
+                                   placeholder="vous@exemple.com" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="id_sujet" class="form-label fw-semibold">Sujet *</label>
+                            <input type="text" id="id_sujet" name="sujet" class="form-control"
+                                   placeholder="Objet de votre message" required minlength="3">
+                        </div>
+                        <div class="col-12">
+                            <label for="id_message" class="form-label fw-semibold">Message *</label>
+                            <textarea id="id_message" name="message" class="form-control" rows="5"
+                                      placeholder="Décrivez votre demande..." required minlength="10"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg mt-4 px-5">
+                        <i class="bi bi-send me-2"></i>Envoyer le message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}À propos — BKLbusiness{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-1"><i class="bi bi-info-circle me-2"></i>À propos</h1>
+        <p class="mb-0 opacity-75">BKL Business Technologies</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- ─── Présentation ─── -->
+    <div class="row g-4 mb-5 align-items-center">
+        <div class="col-lg-6">
+            <h2 class="fw-bold mb-3">Notre mission</h2>
+            <p class="text-muted">
+                BKLbusiness Service est une plateforme web sécurisée de type marketplace permettant
+                aux clients de consulter des produits, passer des commandes, suivre leurs achats
+                et interagir avec les vendeurs.
+            </p>
+            
+            <div class="d-flex gap-3 mt-4">
+                <a href="/catalog/" class="btn btn-primary">
+                    <i class="bi bi-grid me-1"></i>Catalogue
+                </a>
+                <a href="/security/contact/" class="btn btn-outline-secondary">
+                    <i class="bi bi-envelope me-1"></i>Contact
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card p-4" style="background:linear-gradient(135deg,#f8fafc,#eef2ff)">
+                <h5 class="fw-bold mb-3"><i class="bi bi-shield-check me-2 text-primary"></i>Stack technique</h5>
+                <div class="row g-3">
+                    {% for tech in techs %}
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="{{ tech.icon }}" style="color:{{ tech.color }};font-size:1.4rem"></i>
+                            <div>
+                                <p class="fw-semibold mb-0 small">{{ tech.name }}</p>
+                                <p class="text-muted mb-0" style="font-size:.75rem">{{ tech.role }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Sécurité ─── -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold text-center mb-4">Mécanismes de sécurité implémentés</h3>
+        </div>
+        {% for item in security_items %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-4 h-100">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:40px;height:40px;background:{{ item.bg }}">
+                        <i class="{{ item.icon }} text-white"></i>
+                    </div>
+                    <h6 class="fw-bold mb-0">{{ item.title }}</h6>
+                </div>
+                <p class="text-muted small mb-0">{{ item.desc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ─── Équipe / Contact ─── -->
+    <div class="rounded-4 p-5 text-center mb-5"
+         style="background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff">
+        <h3 class="fw-bold mb-2">BKL Business Technologies</h3>
+        <p style="color:#94a3b8" class="mb-3">Avenue Charles de Gaulle, N'Djamena, Tchad</p>
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <span><i class="bi bi-telephone me-1" style="color:#4f46e5"></i>+235 90 45 82 82</span>
+            <span><i class="bi bi-telephone me-1" style="color:#4f46e5"></i>+235 69 67 82 82</span>
+            <span><i class="bi bi-envelope me-1" style="color:#4f46e5"></i>contact@bklbusinesstechnologies.com</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

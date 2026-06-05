@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Mon Profil — BKLbusiness{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-1"><i class="bi bi-person-circle me-2"></i>Mon Profil</h1>
+        <p class="mb-0 opacity-75">Gérez vos informations personnelles</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+
+        <!-- ─── Carte de profil ─── -->
+        <div class="col-lg-4">
+            <div class="card p-4 text-center h-100">
+                <div class="mb-3">
+                    {% if profile.avatar %}
+                        <img src="{{ profile.avatar.url }}" alt="Avatar"
+                             class="rounded-circle border border-3" style="width:100px;height:100px;object-fit:cover;border-color:#4f46e5 !important">
+                    {% else %}
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                             style="width:100px;height:100px;background:linear-gradient(135deg,#4f46e5,#3730a3)">
+                            <i class="bi bi-person-fill text-white" style="font-size:2.5rem"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <h4 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h4>
+                <p class="text-muted mb-2">@{{ user.username }}</p>
+                <span class="badge px-3 py-2 mb-3"
+                      style="background:{% if profile.role == 'admin' %}#ef4444{% elif profile.role == 'vendeur' %}#f59e0b{% else %}#4f46e5{% endif %}">
+                    <i class="bi bi-{% if profile.role == 'admin' %}shield-fill{% elif profile.role == 'vendeur' %}bag-fill{% else %}person-fill{% endif %} me-1"></i>
+                    {{ profile.get_role_display }}
+                </span>
+                <hr>
+                <div class="text-start small">
+                    <p class="mb-1 text-muted"><i class="bi bi-envelope me-2"></i>{{ user.email }}</p>
+                    {% if profile.phone %}
+                    <p class="mb-1 text-muted"><i class="bi bi-telephone me-2"></i>{{ profile.phone }}</p>
+                    {% endif %}
+                    <p class="mb-0 text-muted"><i class="bi bi-calendar me-2"></i>Membre depuis {{ user.date_joined|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Formulaire d'édition ─── -->
+        <div class="col-lg-8">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4"><i class="bi bi-pencil-square me-2" style="color:#4f46e5"></i>Modifier mes informations</h5>
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold">Prénom</label>
+                            <input type="text" name="first_name" class="form-control"
+                                   value="{{ user.first_name }}" placeholder="Votre prénom">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold">Nom</label>
+                            <input type="text" name="last_name" class="form-control"
+                                   value="{{ user.last_name }}" placeholder="Votre nom">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold"><i class="bi bi-telephone me-1"></i>Téléphone</label>
+                            <input type="tel" name="phone" class="form-control"
+                                   value="{{ profile.phone }}" placeholder="+235 XX XX XX XX">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold"><i class="bi bi-person-badge me-1"></i>Rôle</label>
+                            <input type="text" class="form-control" value="{{ profile.get_role_display }}" disabled>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold"><i class="bi bi-geo-alt me-1"></i>Adresse</label>
+                            <textarea name="address" class="form-control" rows="2"
+                                      placeholder="Votre adresse complète">{{ profile.address }}</textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold"><i class="bi bi-image me-1"></i>Photo de profil</label>
+                            <input type="file" name="avatar" class="form-control" accept="image/jpeg,image/png,image/webp">
+                            <div class="form-text">JPG, PNG ou WebP — 2 Mo maximum</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i>Enregistrer
+                        </button>
+                        <a href="/orders/my-orders/" class="btn btn-outline-secondary">
+                            <i class="bi bi-bag me-1"></i>Mes commandes
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ─── Liens rapides ─── -->
+            <div class="card p-4 mt-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-lightning me-2" style="color:#f59e0b"></i>Actions rapides</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="/orders/my-orders/" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-bag me-1"></i>Mes commandes
+                    </a>
+                    <a href="/catalog/" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-grid me-1"></i>Catalogue
+                    </a>
+                    <a href="/security/upload/" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-cloud-upload me-1"></i>Upload
+                    </a>
+                    {% if user.is_staff %}
+                    <a href="/dashboard/" class="btn btn-sm btn-warning">
+                        <i class="bi bi-speedometer2 me-1"></i>Dashboard Admin
+                    </a>
+                    <a href="/security/logs/" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-shield me-1"></i>Journaux
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

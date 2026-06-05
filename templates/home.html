@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}BKLbusiness — Plateforme commerciale sécurisée{% endblock %}
+
+{% block content %}
+<!-- ─── Hero Section ─── -->
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);
+            min-height:85vh;display:flex;align-items:center;margin:-16px 0 0 0;padding:4rem 0">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge px-3 py-2 mb-3"
+                      style="background:rgba(79,70,229,.2);color:#818cf8;border:1px solid rgba(79,70,229,.3);border-radius:50px">
+                    <i class="bi bi-shield-check me-1"></i>Plateforme 100% sécurisée
+                </span>
+                {% if settings_site %}
+                <h1 class="display-4 fw-bold text-white mb-3" style="line-height:1.15">
+                    {{ settings_site.hero_titre }}
+                </h1>
+                <p class="lead mb-4" style="color:#94a3b8">
+                    {{ settings_site.hero_description }}
+                </p>
+                {% else %}
+                <h1 class="display-4 fw-bold text-white mb-3" style="line-height:1.15">
+                    Bienvenue sur <span style="color:#4f46e5">BKL</span>business
+                </h1>
+                <p class="lead mb-4" style="color:#94a3b8">
+                    Votre marketplace moderne et sécurisée. Découvrez des produits et services de qualité,
+                    gérez vos commandes et interagissez avec nos vendeurs en toute confiance.
+                </p>
+                {% endif %}
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/catalog/" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-grid me-2"></i>Voir le catalogue
+                    </a>
+                    {% if not user.is_authenticated %}
+                    <a href="/accounts/register/" class="btn btn-lg px-4"
+                       style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)">
+                        <i class="bi bi-person-plus me-2"></i>Créer un compte
+                    </a>
+                    {% else %}
+                    <a href="/orders/cart/" class="btn btn-lg px-4"
+                       style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)">
+                        <i class="bi bi-cart3 me-2"></i>Mon panier
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                {% if settings_site and settings_site.hero_image %}
+                <img src="{{ settings_site.hero_image.url }}" alt="BKLbusiness"
+                     class="img-fluid rounded-4" style="max-height:400px;object-fit:cover;box-shadow:0 25px 50px rgba(0,0,0,.5)">
+                {% else %}
+                <div class="rounded-4 d-inline-flex align-items-center justify-content-center"
+                     style="width:350px;height:350px;background:linear-gradient(135deg,rgba(79,70,229,.3),rgba(55,48,163,.1));border:1px solid rgba(79,70,229,.3)">
+                    <i class="bi bi-shop" style="font-size:8rem;color:#4f46e5;opacity:.8"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Features Section ─── -->
+<div class="container py-6 mt-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-6">Pourquoi choisir BKLbusiness ?</h2>
+        
+    </div>
+    <div class="row g-4">
+        {% for feature in features %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card p-4 h-100 text-center">
+                <div class="rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+                     style="width:60px;height:60px;background:{{ feature.bg }}">
+                    <i class="{{ feature.icon }} fs-4 text-white"></i>
+                </div>
+                <h5 class="fw-bold">{{ feature.title }}</h5>
+                <p class="text-muted small">{{ feature.desc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ─── CTA Section ─── -->
+{% if not user.is_authenticated %}
+<div class="container py-4 mb-5">
+    <div class="rounded-4 p-5 text-center text-white"
+         style="background:linear-gradient(135deg,#4f46e5,#3730a3)">
+        <h3 class="fw-bold mb-2">Prêt à commencer ?</h3>
+        <p class="opacity-75 mb-4">Créez votre compte gratuitement et commandez dès maintenant.</p>
+        <a href="/accounts/register/" class="btn btn-lg btn-light fw-bold px-5">
+            <i class="bi bi-rocket me-2"></i>Démarrer maintenant
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

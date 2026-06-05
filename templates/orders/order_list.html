@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Mes commandes — BKLbusiness{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-1"><i class="bi bi-bag me-2"></i>Mes commandes</h1>
+        <p class="mb-0 opacity-75">{{ orders|length }} commande{{ orders|length|pluralize }}</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if orders %}
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Articles</th>
+                            <th>Total</th>
+                            <th>Statut</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="fw-bold">#{{ order.id }}</td>
+                            <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>{{ order.items.count }} article{{ order.items.count|pluralize }}</td>
+                            <td class="fw-semibold">{{ order.total_price }} FCFA</td>
+                            <td>
+                                <span class="badge
+                                    {% if order.status == 'delivered' %}bg-success
+                                    {% elif order.status == 'cancelled' %}bg-danger
+                                    {% elif order.status == 'shipped' %}bg-info
+                                    {% elif order.status == 'confirmed' %}bg-primary
+                                    {% else %}bg-warning text-dark{% endif %}">
+                                    <i class="bi bi-{% if order.status == 'delivered' %}check-circle{% elif order.status == 'cancelled' %}x-circle{% elif order.status == 'shipped' %}truck{% else %}clock{% endif %} me-1"></i>
+                                    {{ order.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/orders/my-orders/{{ order.id }}/"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye me-1"></i>Détails
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-bag-x" style="font-size:4rem;color:#94a3b8"></i>
+        <h4 class="mt-3 fw-bold">Aucune commande</h4>
+        <p class="text-muted">Vous n'avez pas encore passé de commande.</p>
+        <a href="/catalog/" class="btn btn-primary">
+            <i class="bi bi-grid me-1"></i>Découvrir le catalogue
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Gestion des commandes — Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="fw-bold mb-1"><i class="bi bi-bag me-2"></i>Toutes les commandes</h1>
+            <p class="mb-0 opacity-75">{{ orders|length }} commande{{ orders|length|pluralize }}</p>
+        </div>
+        <a href="/dashboard/" class="btn btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i>Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Client</th>
+                            <th>Articles</th>
+                            <th>Total</th>
+                            <th>Statut</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="fw-bold">#{{ order.id }}</td>
+                            <td>{{ order.user.username }}</td>
+                            <td>{{ order.items.count }}</td>
+                            <td class="fw-semibold">{{ order.total_price }} FCFA</td>
+                            <td>
+                                <span class="badge
+                                    {% if order.status == 'delivered' %}bg-success
+                                    {% elif order.status == 'cancelled' %}bg-danger
+                                    {% elif order.status == 'shipped' %}bg-info
+                                    {% elif order.status == 'confirmed' %}bg-primary
+                                    {% else %}bg-warning text-dark{% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-muted small">{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <a href="/orders/my-orders/{{ order.id }}/"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <i class="bi bi-bag-x fs-1 d-block mb-2"></i>
+                                Aucune commande pour l'instant
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

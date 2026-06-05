@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Commande #{{ order.id }} — BKLbusiness{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="fw-bold mb-1"><i class="bi bi-receipt me-2"></i>Commande #{{ order.id }}</h1>
+            <p class="mb-0 opacity-75">Passée le {{ order.created_at|date:"d/m/Y à H:i" }}</p>
+        </div>
+        <span class="badge fs-6
+            {% if order.status == 'delivered' %}bg-success
+            {% elif order.status == 'cancelled' %}bg-danger
+            {% elif order.status == 'shipped' %}bg-info
+            {% elif order.status == 'confirmed' %}bg-primary
+            {% else %}bg-warning text-dark{% endif %}">
+            {{ order.get_status_display }}
+        </span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+        <!-- ─── Articles ─── -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-list-ul me-2"></i>Articles commandés</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th class="text-center">Qté</th>
+                                <th class="text-end">Prix unit.</th>
+                                <th class="text-end">Sous-total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
+                                             class="rounded" style="width:45px;height:45px;object-fit:cover">
+                                        {% else %}
+                                        <div class="rounded d-flex align-items-center justify-content-center"
+                                             style="width:45px;height:45px;background:#f1f5f9">
+                                            <i class="bi bi-box text-muted"></i>
+                                        </div>
+                                        {% endif %}
+                                        <span class="fw-semibold">{{ item.product.name }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">{{ item.quantity }}</td>
+                                <td class="text-end align-middle">{{ item.price }} FCFA</td>
+                                <td class="text-end align-middle fw-bold">{{ item.subtotal }} FCFA</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-active">
+                            <tr>
+                                <th colspan="3">Total</th>
+                                <th class="text-end" style="color:#4f46e5">{{ order.total_price }} FCFA</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Infos commande ─── -->
+        <div class="col-lg-4">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>Informations</h5>
+                <div class="mb-2">
+                    <small class="text-muted">Numéro</small>
+                    <p class="fw-bold mb-0">#{{ order.id }}</p>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">Client</small>
+                    <p class="fw-semibold mb-0">{{ order.user.username }}</p>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">Date</small>
+                    <p class="mb-0">{{ order.created_at|date:"d/m/Y H:i" }}</p>
+                </div>
+                {% if order.notes %}
+                <div class="mb-2">
+                    <small class="text-muted">Notes</small>
+                    <p class="mb-0 small">{{ order.notes }}</p>
+                </div>
+                {% endif %}
+                <hr>
+                <div class="d-grid">
+                    <a href="/orders/my-orders/" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left me-1"></i>Retour aux commandes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Journal de sécurité — BKLbusiness{% endblock %}
+
+{% block content %}
+<div class="page-header" style="background:linear-gradient(135deg,#dc2626,#991b1b)">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="fw-bold mb-1"><i class="bi bi-shield-lock me-2"></i>Journal de sécurité</h1>
+            <p class="mb-0 opacity-75">200 derniers événements — Accès restreint aux administrateurs</p>
+        </div>
+        <a href="/dashboard/" class="btn btn-outline-light">
+            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date/Heure</th>
+                            <th>Utilisateur</th>
+                            <th>Action</th>
+                            <th>Adresse IP</th>
+                            <th>Détails</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td class="small text-muted text-nowrap">{{ log.timestamp|date:"d/m/Y H:i:s" }}</td>
+                            <td>
+                                <span class="fw-semibold small">{{ log.user.username|default:"Anonyme" }}</span>
+                            </td>
+                            <td>
+                                <span class="badge
+                                    {% if log.action == 'login_fail' or log.action == 'access_denied' or log.action == 'rate_limited' %}bg-danger
+                                    {% elif log.action == 'login_ok' or log.action == 'register' %}bg-success
+                                    {% elif log.action == 'logout' %}bg-secondary
+                                    {% elif log.action == 'upload' %}bg-info
+                                    {% elif log.action == 'order' %}bg-warning text-dark
+                                    {% else %}bg-primary{% endif %}">
+                                    {{ log.get_action_display }}
+                                </span>
+                            </td>
+                            <td class="small font-monospace">{{ log.ip|default:"-" }}</td>
+                            <td class="small text-muted">{{ log.details|truncatechars:60 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-5">
+                                <i class="bi bi-shield-check fs-1 d-block mb-2"></i>
+                                Aucun événement enregistré
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Connexion — BKLbusiness{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card p-4 p-md-5" style="border-radius:20px">
+
+                <!-- Logo -->
+                <div class="text-center mb-4">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width:70px;height:70px;background:linear-gradient(135deg,#4f46e5,#3730a3)">
+                        <i class="bi bi-person-lock text-white" style="font-size:1.8rem"></i>
+                    </div>
+                    <h2 class="fw-bold">Connexion</h2>
+                    <p class="text-muted small">Accédez à votre espace BKLbusiness</p>
+                </div>
+
+                {% if error %}
+                <div class="alert alert-danger py-2 small">
+                    <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+                    {% if remaining is not None and remaining > 0 %}
+                    <br><small>{{ remaining }} tentative{{ remaining|pluralize }} restante{{ remaining|pluralize }}</small>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label fw-semibold">
+                            <i class="bi bi-person me-1"></i>Nom d'utilisateur
+                        </label>
+                        <input type="text" id="id_username" name="username"
+                               class="form-control form-control-lg"
+                               placeholder="Votre identifiant" required autocomplete="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label fw-semibold">
+                            <i class="bi bi-lock me-1"></i>Mot de passe
+                        </label>
+                        <div class="input-group">
+                            <input type="password" id="id_password" name="password"
+                                   class="form-control form-control-lg"
+                                   placeholder="Votre mot de passe" required autocomplete="current-password">
+                            <button type="button" class="btn btn-outline-secondary"
+                                    onclick="togglePwd('id_password', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-login" class="btn btn-primary w-100 btn-lg mt-2">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                    </button>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="text-center small">
+                    <p class="mb-1 text-center">
+                        <a href="{% url 'password_reset' %}" class="text-muted small">
+                            <i class="bi bi-key me-1"></i>Mot de passe oublié ?
+                        </a>
+                    </p>
+                    <p class="mb-1">Pas encore de compte ?
+                        <a href="/accounts/register/" class="fw-semibold" style="color:#4f46e5">S'inscrire</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function togglePwd(id, btn) {
+    const input = document.getElementById(id);
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    btn.innerHTML = isPassword ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+}
+</script>
+{% endblock %}

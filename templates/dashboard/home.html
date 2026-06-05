@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% block title %}Tableau de bord — BKLbusiness Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="fw-bold mb-1"><i class="bi bi-speedometer2 me-2"></i>Tableau de bord</h1>
+        <p class="mb-0 opacity-75">Vue d'ensemble de la plateforme BKLbusiness</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- ─── Statistiques ─── -->
+    <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#4f46e5,#3730a3)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 opacity-75 small fw-semibold">UTILISATEURS</p>
+                        <h2 class="fw-bold mb-0">{{ total_users }}</h2>
+                    </div>
+                    <i class="bi bi-people fs-1 opacity-50"></i>
+                </div>
+                <a href="/dashboard/users/" class="text-white-50 small">Voir tout <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#10b981,#059669)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 opacity-75 small fw-semibold">PRODUITS</p>
+                        <h2 class="fw-bold mb-0">{{ total_products }}</h2>
+                    </div>
+                    <i class="bi bi-box fs-1 opacity-50"></i>
+                </div>
+                <a href="/catalog/" class="text-white-50 small">Voir tout <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 opacity-75 small fw-semibold">COMMANDES</p>
+                        <h2 class="fw-bold mb-0">{{ total_orders }}</h2>
+                    </div>
+                    <i class="bi bi-bag fs-1 opacity-50"></i>
+                </div>
+                <a href="/dashboard/orders/" class="text-white-50 small">Voir tout <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="stat-card" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 opacity-75 small fw-semibold">EN ATTENTE</p>
+                        <h2 class="fw-bold mb-0">{{ pending_orders }}</h2>
+                    </div>
+                    <i class="bi bi-clock fs-1 opacity-50"></i>
+                </div>
+                <a href="/dashboard/orders/" class="text-white-50 small">Traiter <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- ─── Dernières commandes ─── -->
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-bag me-2"></i>Dernières commandes</h5>
+                    <a href="/dashboard/orders/" class="btn btn-sm btn-outline-primary">Tout voir</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Client</th>
+                                    <th>Total</th>
+                                    <th>Statut</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td><a href="/orders/my-orders/{{ order.id }}/" class="fw-bold">#{{ order.id }}</a></td>
+                                    <td>{{ order.user.username }}</td>
+                                    <td>{{ order.total_price }} FCFA</td>
+                                    <td>
+                                        <span class="badge
+                                            {% if order.status == 'delivered' %}bg-success
+                                            {% elif order.status == 'cancelled' %}bg-danger
+                                            {% elif order.status == 'shipped' %}bg-info
+                                            {% elif order.status == 'confirmed' %}bg-primary
+                                            {% else %}bg-warning text-dark{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td class="text-muted small">{{ order.created_at|date:"d/m H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="5" class="text-center text-muted py-4">Aucune commande</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Journaux de sécurité ─── -->
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-shield-lock me-2"></i>Journaux récents</h5>
+                    <a href="/security/logs/" class="btn btn-sm btn-outline-danger">Tout voir</a>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for log in recent_logs %}
+                        <li class="list-group-item py-2 px-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge rounded-pill
+                                    {% if log.action == 'login_fail' or log.action == 'access_denied' or log.action == 'rate_limited' %}bg-danger
+                                    {% elif log.action == 'login_ok' %}bg-success
+                                    {% elif log.action == 'logout' %}bg-secondary
+                                    {% else %}bg-primary{% endif %}"
+                                    style="font-size:.65rem">
+                                    {{ log.get_action_display }}
+                                </span>
+                                <small class="text-muted">{{ log.user.username|default:"Anonyme" }}</small>
+                                <small class="text-muted ms-auto">{{ log.timestamp|date:"H:i" }}</small>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-center text-muted py-4">Aucun log</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ─── Liens admin ─── -->
+            <div class="card p-4 mt-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-tools me-2"></i>Administration</h6>
+                <div class="d-flex flex-column gap-2">
+                    <a href="/admin/" class="btn btn-outline-dark btn-sm text-start">
+                        <i class="bi bi-gear me-2"></i>Interface Django Admin
+                    </a>
+                    <a href="/security/logs/" class="btn btn-outline-danger btn-sm text-start">
+                        <i class="bi bi-shield me-2"></i>Journaux de sécurité
+                    </a>
+                    <a href="/dashboard/users/" class="btn btn-outline-primary btn-sm text-start">
+                        <i class="bi bi-people me-2"></i>Gestion des utilisateurs
+                    </a>
+                    <a href="/api/products/" class="btn btn-outline-success btn-sm text-start">
+                        <i class="bi bi-code-slash me-2"></i>API Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

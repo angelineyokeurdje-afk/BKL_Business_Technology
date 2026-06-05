@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+db.sqlite3
+.env
+media/
+staticfiles/
+*.log
+.DS_Store
+check_sqlite.py
+restore_sqlite_to_pos.py
+sqlite_dump.json
