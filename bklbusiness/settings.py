@@ -18,7 +18,7 @@ SECRET_KEY = os.environ.get(
 # ─── Mode debug ───────────────────────────────────────────────────────────────
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', '.render.com',bkl-business-technology.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', '.render.com','bkl-business-technology.onrender.com']
 
 # ─── Applications installées ──────────────────────────────────────────────────
 INSTALLED_APPS = [
