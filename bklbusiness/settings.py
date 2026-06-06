@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get(
 
 # ─── Mode debug ───────────────────────────────────────────────────────────────
 # Allow enabling debug via environment for troubleshooting (False by default)
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', '.render.com', 'bkl-business-technology.onrender.com']
 
