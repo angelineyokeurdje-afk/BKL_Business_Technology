@@ -9,4 +9,4 @@ pip install -r requirements.txt
 python manage.py migrate
 
 # 3. Créer le superutilisateur automatiquement s'il n'existe pas
-python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@bkl.com', 'MonMotDePasse123!')"
+python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('BRUNO', 'bklbusinesstechnologies@gmail.com', 'bklb@-25')"
