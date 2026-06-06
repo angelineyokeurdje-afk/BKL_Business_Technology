@@ -130,10 +130,7 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 STATIC_URL  = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Use whitenoise with a storage backend that doesn't require pre-existing manifest
-if os.environ.get('ENVIRONMENT') == 'production' or not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-else:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # ─── Fichiers médias ──────────────────────────────────────────────────────────
 MEDIA_URL  = '/media/'
