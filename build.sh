@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # exit on error
 set -o errexit
+pip install "whitenoise>=6.0.0,<7.0.0"
 
 # 1. Installation des dépendances avec le bon 's'
 pip install -r requirements.txt
