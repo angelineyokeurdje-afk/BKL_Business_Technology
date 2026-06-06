@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: bkl-business-technology
+    env: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py migrate
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn bklbusiness.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --timeout 60
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: bklbusiness.settings
+      - key: PYTHON_VERSION
+        value: 3.14

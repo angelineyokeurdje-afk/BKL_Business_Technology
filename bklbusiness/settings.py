@@ -16,9 +16,10 @@ SECRET_KEY = os.environ.get(
 )
 
 # ─── Mode debug ───────────────────────────────────────────────────────────────
-DEBUG = False
+# Allow enabling debug via environment for troubleshooting (False by default)
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', '.render.com','bkl-business-technology.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app', '.render.com', 'bkl-business-technology.onrender.com']
 
 # ─── Applications installées ──────────────────────────────────────────────────
 INSTALLED_APPS = [
@@ -81,6 +82,16 @@ DATABASES = {
     }
 }
 
+# If Render (or another host) provides a single DATABASE_URL, prefer it.
+db_url = os.environ.get('DATABASE_URL') or os.environ.get('DATABASE_URL_PRIMARY')
+if db_url:
+    try:
+        import dj_database_url
+        DATABASES['default'] = dj_database_url.parse(db_url, conn_max_age=600, ssl_require=True)
+    except Exception:
+        # dj_database_url may not be installed; keep the explicit settings above
+        pass
+
 # ─── Hashage des mots de passe ────────────────────────────────────────────────
 AUTH_PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -118,7 +129,11 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 # ─── Fichiers statiques ───────────────────────────────────────────────────────
 STATIC_URL  = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Use whitenoise with a storage backend that doesn't require pre-existing manifest
+if os.environ.get('ENVIRONMENT') == 'production' or not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # ─── Fichiers médias ──────────────────────────────────────────────────────────
 MEDIA_URL  = '/media/'
@@ -162,8 +177,8 @@ EMAIL_BACKEND = os.environ.get(
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('lmahamadouzaharadine@gmail.com', '')
-EMAIL_HOST_PASSWORD = os.environ.get('etrdrgmltfggzzsk', '')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get(
     'DEFAULT_FROM_EMAIL',
     f'BKLbusiness <{EMAIL_HOST_USER or "no-reply@example.com"}>'
