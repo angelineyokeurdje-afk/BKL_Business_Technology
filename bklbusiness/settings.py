@@ -82,7 +82,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bklbusiness.wsgi.application'
 
 # ─── Base de données ─────────────────────────────────────────────────────────
-# En production (Render/Railway), utilise PostgreSQL via DATABASE_URL
+# En production (Render/Railway), utilise PostgreSQL via nBASE_URL
 # En local, utilise SQLite (aucune installation requise)
 db_url = os.environ.get('DATABASE_URL') or os.environ.get('DATABASE_URL_PRIMARY')
 
