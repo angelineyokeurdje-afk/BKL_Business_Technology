@@ -4,7 +4,20 @@ Vues pour le catalogue de produits et la page d'accueil.
 """
 
 from django.shortcuts import render
+from django.db import ProgrammingError, OperationalError
 from .models import Product, SiteSettings
+
+
+def get_site_settings():
+    """
+    Récupère les paramètres du site de manière sécurisée.
+    Retourne None si la table n'existe pas encore (durant les migrations).
+    """
+    try:
+        return SiteSettings.objects.first()
+    except (ProgrammingError, OperationalError):
+        # La table n'existe pas encore (migrations en cours ou première exécution)
+        return None
 
 
 # Fonctionnalités affichées sur la page d'accueil
@@ -46,7 +59,7 @@ def index(request):
 
 def home(request):
     """Page d'accueil avec hero dynamique et features."""
-    settings_site = SiteSettings.objects.first()
+    settings_site = get_site_settings()
     return render(request, 'home.html', {
         'settings_site': settings_site,
         'features': FEATURES,
