@@ -5,10 +5,13 @@ set -o errexit
 # 1. Installation des dépendances
 pip install -r requirements.txt
 
-# 2. Collecte des fichiers statiques
+# 2. Application des migrations de base de données
+python manage.py migrate
+
+# 3. Collecte des fichiers statiques
 python manage.py collectstatic --no-input
 
-# 3. Création sécurisée du superutilisateur via variables d'environnement uniquement
+# 4. Création sécurisée du superutilisateur via variables d'environnement uniquement
 python manage.py shell -c "
 import os
 from django.contrib.auth import get_user_model;
