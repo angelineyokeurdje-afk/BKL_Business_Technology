@@ -11,12 +11,6 @@ from django.utils.translation import gettext_lazy as _
 # ─── Chemins de base ──────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ─── Sécurité : clé secrète ───────────────────────────────────────────────────
-SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY',
-    'django-insecure-%0&#^1-(*vitnwrz6iw!s*)n^!zj4@^l8r**d$j)ghw^%po&lu'
-)
-
 # ─── Mode debug ───────────────────────────────────────────────────────────────
 DEBUG = os.environ.get('DJANGO_DEBUG', '').strip().lower() in ('1', 'true', 'yes')
 _IN_PRODUCTION = bool(
@@ -24,6 +18,14 @@ _IN_PRODUCTION = bool(
     or os.environ.get('RAILWAY_ENVIRONMENT', '')
     or os.environ.get('RAILWAY_SERVICE_ID', '')
 )
+
+# ─── Sécurité : clé secrète ───────────────────────────────────────────────────
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    if _IN_PRODUCTION:
+        raise ValueError("DJANGO_SECRET_KEY environment variable is required in production!")
+    # Use a fallback insecure key only in development
+    SECRET_KEY = 'django-insecure-%0&#^1-(*vitnwrz6iw!s*)n^!zj4@^l8r**d$j)ghw^%po&lu'
 
 ALLOWED_HOSTS = [
     'localhost', '127.0.0.1',
@@ -101,13 +103,14 @@ if db_url:
             )
         }
     except Exception:
+        # Fallback configuration - all values must come from environment
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'NAME': os.environ.get('DB_NAME', 'bklbusiness_db'),
-                'USER': os.environ.get('DB_USER', 'bklbusiness_user'),
-                'PASSWORD': os.environ.get('DB_PASSWORD', 'BklBusiness2026!'),
-                'HOST': os.environ.get('DB_HOST', 'localhost'),
+                'NAME': os.environ.get('DB_NAME', ''),
+                'USER': os.environ.get('DB_USER', ''),
+                'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+                'HOST': os.environ.get('DB_HOST', ''),
                 'PORT': os.environ.get('DB_PORT', '5432'),
                 'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', '600')),
             }

@@ -1,17 +1,86 @@
+# Python
 venv/
 __pycache__/
 *.pyc
 *.pyo
-db.sqlite3
-.env
-media/
-#staticfiles/
-*.log
-.DS_Store
-check_sqlite.py
-restore_sqlite_to_pos.py
-sqlite_dump.json
+*.py[cod]
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Railway
+# Django
+db.sqlite3
+db.sqlite3-journal
+*.log
+.env
+.env.local
+.env.*.local
+media/
+staticfiles/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Railway & Deployment
 .railway/
 dump.rdb
+node_modules/
+*.pem
+*.key
+
+# Project specific
+check_sqlite.py
+restore_sqlite_to_postgres.py
+sqlite_dump.json
+
+# Temporary files
+*.tmp
+*.bak
