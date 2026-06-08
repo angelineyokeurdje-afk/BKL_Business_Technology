@@ -11,13 +11,19 @@ python manage.py collectstatic --no-input
 # 3. Application des migrations
 python manage.py migrate
 
-# 4. Création sécurisée du superutilisateur sans doublon
+# 4. Création sécurisée du superutilisateur via variables d'environnement uniquement
 python manage.py shell -c "
+import os
 from django.contrib.auth import get_user_model;
 User = get_user_model();
-if not User.objects.filter(username='BRUNO').exists():
-    User.objects.create_superuser('BRUNO', 'bklbusinesstechnologies@gmail.com', 'bkl@-25')
-    print('Superutilisateur créé avec succès !')
+admin_username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin');
+admin_email = os.environ.get('DJANGO_SUPERUSER_EMAIL', '');
+admin_password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', '');
+if admin_password and not User.objects.filter(username=admin_username).exists():
+    User.objects.create_superuser(admin_username, admin_email, admin_password)
+    print(f'Superutilisateur \"{admin_username}\" créé avec succès !')
+elif admin_password:
+    print(f'Le superutilisateur \"{admin_username}\" existe déjà.')
 else:
-    print('Le superutilisateur existe déjà.')
+    print('Aucun superutilisateur créé. Définissez DJANGO_SUPERUSER_PASSWORD dans l\\'environnement.')
 "

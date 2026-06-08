@@ -54,5 +54,31 @@ def home(request):
 
 
 def about(request):
-    """Page À propos."""
-    return render(request, 'about.html')
+    """Page À propos avec présentation de la stack technique et sécurité."""
+
+    # Technologies utilisées par la plateforme
+    techs = [
+        {'name': 'Django',     'role': 'Framework web',           'icon': 'bi bi-code-slash',   'color': '#092E20'},
+        {'name': 'PostgreSQL', 'role': 'Base de données',          'icon': 'bi bi-database',     'color': '#336791'},
+        {'name': 'Bootstrap',  'role': 'Interface utilisateur',    'icon': 'bi bi-layout-three-columns', 'color': '#7952B3'},
+        {'name': 'Python',     'role': 'Langage backend',         'icon': 'bi bi-filetype-py',  'color': '#3776AB'},
+        {'name': 'Cloudinary', 'role': 'Stockage médias',          'icon': 'bi bi-cloud-upload', 'color': '#3448C5'},
+        {'name': 'Redis',      'role': 'Cache & sessions',         'icon': 'bi bi-database-gear','color': '#DC382D'},
+        {'name': 'Docker',     'role': 'Conteneurisation',         'icon': 'bi bi-box-seam',     'color': '#2496ED'},
+        {'name': 'Gunicorn',   'role': 'Serveur WSGI',            'icon': 'bi bi-server',       'color': '#499848'},
+    ]
+
+    # Mécanismes de sécurité implémentés
+    security_items = [
+        {'icon': 'bi bi-shield-lock',   'bg': '#4f46e5', 'title': 'CSRF & XSS',       'desc': 'Protection complète contre les attaques CSRF et XSS via Django.'},
+        {'icon': 'bi bi-key',           'bg': '#10b981', 'title': 'Hash Argon2',       'desc': 'Mots de passe hashés avec Argon2, l\'algorithme le plus robuste.'},
+        {'icon': 'bi bi-session',       'bg': '#f59e0b', 'title': 'Sessions sécurisées','desc': 'Sessions HTTP-only avec régénération à la connexion (anti-fixation).'},
+        {'icon': 'bi bi-speedometer2',  'bg': '#ef4444', 'title': 'Rate Limiting',     'desc': 'Limitation des tentatives de connexion (brute-force protection).'},
+        {'icon': 'bi bi-file-lock',     'bg': '#8b5cf6', 'title': 'Upload filtré',    'desc': 'Validation MIME, extension et taille pour tous les uploads.'},
+        {'icon': 'bi bi-shield-check',  'bg': '#ec4899', 'title': 'Sanitization',     'desc': 'Nettoyage des entrées utilisateur avec Bleach (HTML/XSS).'},
+    ]
+
+    return render(request, 'about.html', {
+        'techs': techs,
+        'security_items': security_items,
+    })
