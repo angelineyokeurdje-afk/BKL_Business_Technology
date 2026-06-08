@@ -11,3 +11,7 @@ media/
 check_sqlite.py
 restore_sqlite_to_pos.py
 sqlite_dump.json
+
+# Railway
+.railway/
+dump.rdb

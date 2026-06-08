@@ -19,13 +19,18 @@ SECRET_KEY = os.environ.get(
 
 # ─── Mode debug ───────────────────────────────────────────────────────────────
 DEBUG = os.environ.get('DJANGO_DEBUG', '').strip().lower() in ('1', 'true', 'yes')
-_IN_PRODUCTION = os.environ.get('RENDER', '') or os.environ.get('RAILWAY_ENVIRONMENT', '')
+_IN_PRODUCTION = bool(
+    os.environ.get('RENDER', '')
+    or os.environ.get('RAILWAY_ENVIRONMENT', '')
+    or os.environ.get('RAILWAY_SERVICE_ID', '')
+)
 
 ALLOWED_HOSTS = [
     'localhost', '127.0.0.1',
     '.railway.app', '.render.com',
     'bkl-business-technology.onrender.com',
     os.environ.get('ALLOWED_HOST', '').strip(),
+    os.environ.get('RAILWAY_PUBLIC_DOMAIN', '').strip(),
 ]
 ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]
 

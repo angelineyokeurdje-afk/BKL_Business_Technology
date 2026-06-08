@@ -8,10 +8,7 @@ pip install -r requirements.txt
 # 2. Collecte des fichiers statiques
 python manage.py collectstatic --no-input
 
-# 3. Application des migrations
-python manage.py migrate
-
-# 4. Création sécurisée du superutilisateur via variables d'environnement uniquement
+# 3. Création sécurisée du superutilisateur via variables d'environnement uniquement
 python manage.py shell -c "
 import os
 from django.contrib.auth import get_user_model;
