@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db import ProgrammingError, OperationalError
 from .models import Product, SiteSettings
 
 
@@ -15,7 +16,11 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         # Interdit de créer une 2e instance si une existe déjà
-        return not SiteSettings.objects.exists()
+        try:
+            return not SiteSettings.objects.exists()
+        except (ProgrammingError, OperationalError):
+            # Table doesn't exist yet (migrations in progress)
+            return False
 
     def has_delete_permission(self, request, obj=None):
         # Empêche la suppression du seul paramètre du site
